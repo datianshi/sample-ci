@@ -22,7 +22,7 @@
 		<connection>scm:git:git@github.com:datianshi/sample-ci.git</connection>
 		<url>scm:git:git@github.com:datianshi/sample-ci.git</url>
 		<developerConnection>scm:git:git@github.com:tobrien/git-demo.git</developerConnection>
-	</scm>s
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
