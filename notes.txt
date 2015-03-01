@@ -1,0 +1,32 @@
+import hudson.model.*;
+import hudson.util.*;
+
+def thr = Thread.currentThread();
+def currentBuild = thr?.executable;
+def mavenVer = currentBuild.getParent().getModules().toArray()[0].getVersion();
+def newParamAction = new hudson.model.ParametersAction(new hudson.model.StringParameterValue("MAVEN_VERSION", mavenVer));
+currentBuild.addAction(newParamAction);
+
+SRC_BUILD_NUMBER=${MAVEN_VERSION}
+SRC_GIT_COMMIT=${GIT_COMMIT}
+
+git clone -b develop git@github.com:datianshi/sample-ci.git .
+git reset --hard ${SRC_GIT_COMMIT}
+git checkout -b master remotes/origin/master
+git rebase develop
+git push origin master
+
+deploy
+
+release_version=`echo ${SRC_BUILD_NUMBER} | sed "s/\(^.*\)\..*$/\1/"`
+git tag ${release_version}
+git push origin $release_version
+current_version=`echo ${release_version} | sed "s/\(^.*[\.]\)//"`
+major_version=`echo ${release_version} | sed "s/\(^.*[\.]\)\(.*$\)/\1/g"`
+next=$((current_version+1))
+version="${major_version}${next}"
+echo "next_version=$version" > build.properties
+
+build.properties
+
+versions:set -DnewVersion=${next_version}
