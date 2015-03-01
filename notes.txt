@@ -30,3 +30,5 @@ echo "next_version=$version" > build.properties
 build.properties
 
 versions:set -DnewVersion=${next_version}
+
+xxx
